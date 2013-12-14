@@ -166,8 +166,10 @@ class Signature(dict):
     def delay(self, *partial_args, **partial_kwargs):
         return self.apply_async(partial_args, partial_kwargs)
 
-    def apply(self, args=(), kwargs={}, **options):
+    def apply(self, args=(), kwargs={}, async=False, **options):
         """Apply this task locally."""
+        if async:
+            return self.apply_async(args, kwargs, **options)
         # For callbacks: extra args are prepended to the stored args.
         args, kwargs, options = self._merge(args, kwargs, options)
         return self.type.apply(args, kwargs, **options)

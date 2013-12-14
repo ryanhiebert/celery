@@ -670,7 +670,7 @@ class Task(object):
         return ret
 
     def apply(self, args=None, kwargs=None,
-              link=None, link_error=None, **options):
+              link=None, link_error=None, async=False, **options):
         """Execute this task locally, by blocking until the task returns.
 
         :param args: positional arguments passed on to the task.
@@ -679,9 +679,11 @@ class Task(object):
                         the :setting:`CELERY_EAGER_PROPAGATES_EXCEPTIONS`
                         setting.
 
-        :rtype :class:`celery.result.EagerResult`:
-
         """
+        if async:
+            return self.apply_async(
+                args, kwargs, link=link, link_error=link_error, **options)
+
         # trace imports Task, so need to import inline.
         from celery.app.trace import eager_trace_task
 
