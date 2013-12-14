@@ -160,8 +160,7 @@ class Signature(dict):
              immutable=immutable)
 
     def __call__(self, *partial_args, **partial_kwargs):
-        args, kwargs, _ = self._merge(partial_args, partial_kwargs, None)
-        return self.type(*args, **kwargs)
+        return self.apply(partial_args, partial_kwargs).get()
 
     def delay(self, *partial_args, **partial_kwargs):
         return self.apply_async(partial_args, partial_kwargs)

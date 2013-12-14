@@ -410,16 +410,7 @@ class Task(object):
         setattr(self, attr, meth)
 
     def __call__(self, *args, **kwargs):
-        _task_stack.push(self)
-        self.push_request()
-        try:
-            # add self if this is a bound task
-            if self.__self__ is not None:
-                return self.run(self.__self__, *args, **kwargs)
-            return self.run(*args, **kwargs)
-        finally:
-            self.pop_request()
-            _task_stack.pop()
+        return self.apply(args, kwargs).get()
 
     def __reduce__(self):
         # - tasks are pickled into the name of the task only, and the reciever
